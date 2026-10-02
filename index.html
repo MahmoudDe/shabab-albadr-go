@@ -19,6 +19,9 @@
 (async function () {
   var msg = document.getElementById('msg');
   var token = new URLSearchParams(location.search).get('t');
+  // Be forgiving of hand-made QR text such as  ?t=<cardToken>/card/abc123  or  ?t=/card/abc123:
+  // the real token is always the last path segment.
+  if (token) token = token.split('/').filter(Boolean).pop();
   if (!token) { msg.textContent = 'رابط البطاقة غير صالح.'; return; }
   try {
     var res = await fetch('config.json', { cache: 'no-store' });
